@@ -1,0 +1,19 @@
+name: "ChestLocker"
+version: "1.2"
+main: net.earomc.chestlocker.ChestLocker
+api-version: 1.19
+authors:
+  - "earomc"
+  - "kraken22"
+commands:
+  lock:
+    description: "Locks a container."
+    usage: "§c/lock <password> | Specify a password. You can then only open the container with an item with the password's name."
+  unlock:
+    description: "Unlocks a container."
+    usage: "§c/unlock <password> | You have to specify the password that was used to lock the container."
+  adminunlock:
+    description: "Unlocks any container without having to specify the password."
+    usage: "§c/adminunlock"
+    permission: "chestlocker.adminunlock"
+    permission-message: "§cYou do not have the permission to do that."
