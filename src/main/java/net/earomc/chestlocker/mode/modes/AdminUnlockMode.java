@@ -1,7 +1,6 @@
 package net.earomc.chestlocker.mode.modes;
 
 import net.earomc.chestlocker.UnlockResult;
-import net.earomc.chestlocker.Util;
 import net.earomc.chestlocker.lockables.LockableContainer;
 import net.earomc.chestlocker.mode.Mode;
 import net.earomc.chestlocker.mode.ModeType;

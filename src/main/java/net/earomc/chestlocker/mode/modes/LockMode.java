@@ -6,8 +6,6 @@ import net.earomc.chestlocker.Util;
 import net.earomc.chestlocker.lockables.LockableContainer;
 import net.earomc.chestlocker.mode.ModeType;
 import net.earomc.chestlocker.mode.WordMode;
-import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 /**
@@ -43,7 +41,7 @@ public class LockMode extends WordMode {
         LockResult result = container.tryLock(lock);
         switch (result) {
             case SUCCESS -> {
-                player.sendMessage("§a" + container.getName() + " locked with §9" + lock + "§a.");
+                player.sendMessage("§a" + container.getName() + " locked with §7" + lock + "§a.");
                 Util.playLockedSound(player.getLocation());
                 LoggingUtil.logLock(player, container);
             }

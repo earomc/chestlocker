@@ -89,4 +89,8 @@ public class LockableDoubleChest extends LockableContainer<Chest> {
                 + ", chestLeftLock: " + chestLeft.getLock() + ", @" + hashCode();
     }
 
+    @Override
+    public Chest getState() {
+        return chestLeft.getState();
+    }
 }

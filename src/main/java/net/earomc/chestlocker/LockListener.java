@@ -7,7 +7,6 @@ import net.earomc.chestlocker.lockables.LockableDoubleChest;
 import net.earomc.chestlocker.mode.Mode;
 import net.earomc.chestlocker.mode.ModeManager;
 import net.earomc.chestlocker.mode.WordMode;
-import org.bukkit.Bukkit;
 import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,7 +21,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 

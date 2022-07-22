@@ -1,7 +1,5 @@
 package net.earomc.chestlocker.mode;
 
-import net.earomc.chestlocker.UnlockResult;
-import net.earomc.chestlocker.Util;
 import net.earomc.chestlocker.lockables.LockableContainer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +16,7 @@ public abstract class Mode {
         this.player = player;
     }
 
-    protected Player player;
+    protected final Player player;
 
     public abstract ModeType getType();
 
