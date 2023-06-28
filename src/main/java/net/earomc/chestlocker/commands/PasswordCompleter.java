@@ -8,12 +8,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-/**
- * @author earomc
- * Created on Juli 22, 2022 | 01:39:30
- * ʕっ•ᴥ•ʔっ
- */
-
 public class PasswordCompleter implements TabCompleter {
 
     @Nullable

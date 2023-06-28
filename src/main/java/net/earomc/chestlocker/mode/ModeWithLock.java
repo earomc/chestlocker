@@ -9,11 +9,11 @@ import org.bukkit.entity.Player;
  * Represents a mode that carries a lock word with it.
  */
 
-public abstract class WordMode extends Mode {
+public abstract class ModeWithLock extends Mode {
 
     protected final String lock;
 
-    public WordMode(Player player, String lock) {
+    public ModeWithLock(Player player, String lock) {
         super(player);
         this.lock = lock;
     }

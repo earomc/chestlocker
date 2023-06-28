@@ -1,20 +1,14 @@
 package net.earomc.chestlocker.mode.modes;
 
-import net.earomc.chestlocker.LoggingUtil;
+import net.earomc.chestlocker.ChestLockerLogger;
 import net.earomc.chestlocker.UnlockResult;
-import net.earomc.chestlocker.Util;
+import net.earomc.chestlocker.ChestLockerSounds;
 import net.earomc.chestlocker.lockables.LockableContainer;
 import net.earomc.chestlocker.mode.ModeType;
-import net.earomc.chestlocker.mode.WordMode;
+import net.earomc.chestlocker.mode.ModeWithLock;
 import org.bukkit.entity.Player;
 
-/**
- * @author earomc
- * Created on Juli 21, 2022 | 23:18:48
- * ʕっ•ᴥ•ʔっ
- */
-
-public class UnlockMode extends WordMode {
+public class UnlockMode extends ModeWithLock {
 
     public UnlockMode(Player player, String lock) {
         super(player, lock);
@@ -46,17 +40,17 @@ public class UnlockMode extends WordMode {
         switch (result) {
             case SUCCESS -> {
                 player.sendMessage("§a" + container.getName() + " unlocked!");
-                Util.playUnlockedSound(player.getLocation());
-                LoggingUtil.logUnlock(player, container);
+                ChestLockerSounds.playUnlockedSound(player.getLocation());
+                ChestLockerLogger.logUnlock(player, container);
             }
             case INCORRECT_LOCK -> {
                 player.sendMessage("§cCould not unlock " + container.getName().toLowerCase() + ". Lock is incorrect.");
-                Util.playFailSound(player.getLocation());
-                LoggingUtil.logFailedUnlock(player, container);
+                ChestLockerSounds.playFailSound(player.getLocation());
+                ChestLockerLogger.logFailedUnlock(player, container);
             }
             case CONTAINER_NOT_LOCKED -> {
                 player.sendMessage("§cThis " + container.getName().toLowerCase() + " is not locked.");
-                Util.playFailSound(player.getLocation());
+                ChestLockerSounds.playFailSound(player.getLocation());
             }
         }
     }

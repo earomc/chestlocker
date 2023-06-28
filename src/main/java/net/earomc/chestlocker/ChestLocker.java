@@ -11,16 +11,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ChestLocker extends JavaPlugin {
 
-    public static ChestLocker getInstance() {
-        return instance;
-    }
-
-    private static ChestLocker instance;
-
     private ModeManager modeManager;
 
     public void onEnable() {
-        instance = this;
         this.modeManager = new ModeManager();
         Bukkit.getPluginManager().registerEvents(new LockListener(modeManager), this);
         registerCommands();

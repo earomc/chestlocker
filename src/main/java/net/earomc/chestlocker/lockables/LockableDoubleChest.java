@@ -2,6 +2,7 @@ package net.earomc.chestlocker.lockables;
 
 import net.earomc.chestlocker.LockResult;
 import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 
 import javax.annotation.Nullable;
 
@@ -92,5 +93,16 @@ public class LockableDoubleChest extends LockableContainer<Chest> {
     @Override
     public Chest getState() {
         return chestLeft.getState();
+    }
+
+    public static boolean isDoubleChest(Chest chest) {
+        return chest.getInventory().getSize() == 54;
+    }
+
+    @Nullable
+    public static DoubleChest getDoubleChestIfSo(Chest chest) {
+        if (isDoubleChest(chest)) {
+            return (DoubleChest) chest.getInventory().getHolder();
+        } else return null;
     }
 }

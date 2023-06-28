@@ -1,11 +1,11 @@
 package net.earomc.chestlocker.mode.modes;
 
+import net.earomc.chestlocker.ChestLockerLogger;
 import net.earomc.chestlocker.LockResult;
-import net.earomc.chestlocker.LoggingUtil;
-import net.earomc.chestlocker.Util;
+import net.earomc.chestlocker.ChestLockerSounds;
 import net.earomc.chestlocker.lockables.LockableContainer;
 import net.earomc.chestlocker.mode.ModeType;
-import net.earomc.chestlocker.mode.WordMode;
+import net.earomc.chestlocker.mode.ModeWithLock;
 import org.bukkit.entity.Player;
 
 /**
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
  * ʕっ•ᴥ•ʔっ
  */
 
-public class LockMode extends WordMode {
+public class LockMode extends ModeWithLock {
 
     public LockMode(Player player, String lock) {
         super(player, lock);
@@ -42,12 +42,12 @@ public class LockMode extends WordMode {
         switch (result) {
             case SUCCESS -> {
                 player.sendMessage("§a" + container.getName() + " locked with §7" + lock + "§a.");
-                Util.playLockedSound(player.getLocation());
-                LoggingUtil.logLock(player, container);
+                ChestLockerSounds.playLockedSound(player.getLocation());
+                ChestLockerLogger.logLock(player, container);
             }
             case LOCK_ALREADY_SET -> {
                 player.sendMessage("§cCannot lock this locked " + container.getName().toLowerCase() + ". Lock has to be removed first.");
-                Util.playFailSound(player.getLocation());
+                ChestLockerSounds.playFailSound(player.getLocation());
             }
         }
     }

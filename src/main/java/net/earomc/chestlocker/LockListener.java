@@ -6,7 +6,7 @@ import net.earomc.chestlocker.lockables.LockableContainer;
 import net.earomc.chestlocker.lockables.LockableDoubleChest;
 import net.earomc.chestlocker.mode.Mode;
 import net.earomc.chestlocker.mode.ModeManager;
-import net.earomc.chestlocker.mode.WordMode;
+import net.earomc.chestlocker.mode.ModeWithLock;
 import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -60,8 +60,8 @@ public class LockListener implements Listener {
         LockableContainer<?> container = containerFactory.newContainerFromState(clickedBlock.getState());
         if (container != null) {
             String lock = null;
-            if (mode instanceof WordMode wordMode) {
-                lock = wordMode.getLock();
+            if (mode instanceof ModeWithLock modeWithLock) {
+                lock = modeWithLock.getLock();
             }
             mode.handleAction(player, lock, container);
         }
@@ -73,7 +73,7 @@ public class LockListener implements Listener {
         Block block = event.getBlock();
         BlockState state = block.getState();
         if (state instanceof Chest chestState) {
-            if (Util.isDoubleChest(chestState)) {
+            if (LockableDoubleChest.isDoubleChest(chestState)) {
                 LockableDoubleChest lockableDoubleChest = (LockableDoubleChest) containerFactory.newContainerFromState(state);
 
                 LockableChest otherChest = lockableDoubleChest.getOtherChest(chestState);

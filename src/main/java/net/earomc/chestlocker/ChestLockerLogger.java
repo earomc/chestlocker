@@ -7,13 +7,8 @@ import org.bukkit.entity.Player;
 
 import java.util.logging.Logger;
 
-/**
- * @author earomc
- * Created on Juli 22, 2022 | 03:13:47
- * ʕっ•ᴥ•ʔっ
- */
 
-public class LoggingUtil {
+public class ChestLockerLogger {
 
     private static final Logger logger = Bukkit.getLogger();
 

@@ -4,28 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
-import org.bukkit.block.Chest;
-import org.bukkit.block.DoubleChest;
 
-import javax.annotation.Nullable;
-
-/**
- * @author earomc
- * Created on Juli 15, 2022 | 02:19:22
- * ʕっ•ᴥ•ʔっ
- */
-
-public class Util {
-    public static boolean isDoubleChest(Chest chest) {
-        return chest.getInventory().getSize() == 54;
-    }
-
-    @Nullable
-    public static DoubleChest getDoubleChestIfSo(Chest chest) {
-        if (isDoubleChest(chest)) {
-            return (DoubleChest) chest.getInventory().getHolder();
-        } else return null;
-    }
+public class ChestLockerSounds {
 
     public static void playLockedSound(Location location) {
         playSound(location, Sound.BLOCK_CHEST_LOCKED, 1F, 1F);

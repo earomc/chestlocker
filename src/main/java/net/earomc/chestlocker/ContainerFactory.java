@@ -9,34 +9,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-/**
- * @author earomc
- * Created on Juli 22, 2022 | 01:12:21
- * ʕっ•ᴥ•ʔっ
- */
-
 public class ContainerFactory {
 
     private final Map<Class<? extends BlockState>, Function<BlockState, LockableContainer<?>>> blockstateToContainerSupplierMap;
 
     public ContainerFactory() {
          /*
-        This monstrosity of a map basically maps all the BlockState interfaces to a function that creates a new
-        LockableContainer with the input of the BlockState that is actually clicked. See the method getContainerFromState.
+        This monstrosity of a map basically maps all the BlockState interfaces of the Minecraft container blocks that can be locked to a function that creates a new
+        LockableContainer with the input of the BlockState that is actually clicked. See the method newContainerFromState.
          */
         this.blockstateToContainerSupplierMap = new HashMap<>();
-        registerLockable(Barrel.class, s -> new LockableContainer<>((Barrel) s, "Barrel"));
-        registerLockable(Dispenser.class, s -> new LockableContainer<>((Dispenser) s, "Dispenser"));
-        registerLockable(Dropper.class, s -> new LockableContainer<>((Dropper) s, "Dropper"));
-        registerLockable(Furnace.class, s -> new LockableContainer<>((Furnace) s, "Furnace"));
-        registerLockable(ShulkerBox.class, s -> new LockableContainer<>((ShulkerBox) s, "Shulker Box"));
-        registerLockable(BlastFurnace.class, s -> new LockableContainer<>((BlastFurnace) s, "Blast Furnace"));
-        registerLockable(Smoker.class, s -> new LockableContainer<>((Smoker) s, "Smoker"));
-        registerLockable(Hopper.class, s -> new LockableContainer<>((Hopper) s, "Hopper"));
-        registerLockable(BrewingStand.class, s -> new LockableContainer<>((BrewingStand) s, "Brewing Stand"));
-        registerLockable(Chest.class, s -> {
+        registerContainer(Barrel.class, s -> new LockableContainer<>((Barrel) s, "Barrel"));
+        registerContainer(Dispenser.class, s -> new LockableContainer<>((Dispenser) s, "Dispenser"));
+        registerContainer(Dropper.class, s -> new LockableContainer<>((Dropper) s, "Dropper"));
+        registerContainer(Furnace.class, s -> new LockableContainer<>((Furnace) s, "Furnace"));
+        registerContainer(ShulkerBox.class, s -> new LockableContainer<>((ShulkerBox) s, "Shulker Box"));
+        registerContainer(BlastFurnace.class, s -> new LockableContainer<>((BlastFurnace) s, "Blast Furnace"));
+        registerContainer(Smoker.class, s -> new LockableContainer<>((Smoker) s, "Smoker"));
+        registerContainer(Hopper.class, s -> new LockableContainer<>((Hopper) s, "Hopper"));
+        registerContainer(BrewingStand.class, s -> new LockableContainer<>((BrewingStand) s, "Brewing Stand"));
+        registerContainer(Chest.class, s -> {
             Chest chest = (Chest) s;
-            DoubleChest doubleChest = Util.getDoubleChestIfSo(chest);
+            DoubleChest doubleChest = LockableDoubleChest.getDoubleChestIfSo(chest);
             if (doubleChest != null) {
                 return new LockableDoubleChest(new LockableChest((Chest) doubleChest.getLeftSide()),
                         new LockableChest((Chest) doubleChest.getRightSide()));
@@ -46,7 +40,7 @@ public class ContainerFactory {
         });
     }
 
-    public void registerLockable(Class<? extends BlockState> blockStateClass, Function<BlockState, LockableContainer<?>> stateToContainerFunc) {
+    public void registerContainer(Class<? extends BlockState> blockStateClass, Function<BlockState, LockableContainer<?>> stateToContainerFunc) {
         blockstateToContainerSupplierMap.put(blockStateClass, stateToContainerFunc);
     }
 
