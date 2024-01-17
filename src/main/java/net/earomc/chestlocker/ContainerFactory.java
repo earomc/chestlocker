@@ -19,6 +19,7 @@ public class ContainerFactory {
         LockableContainer with the input of the BlockState that is actually clicked. See the method newContainerFromState.
          */
         this.blockstateToContainerSupplierMap = new HashMap<>();
+        registerContainer(Beacon.class, s -> new LockableContainer<>((Beacon) s, "Beacon"));
         registerContainer(Barrel.class, s -> new LockableContainer<>((Barrel) s, "Barrel"));
         registerContainer(Dispenser.class, s -> new LockableContainer<>((Dispenser) s, "Dispenser"));
         registerContainer(Dropper.class, s -> new LockableContainer<>((Dropper) s, "Dropper"));
@@ -45,11 +46,11 @@ public class ContainerFactory {
     }
 
     public LockableContainer<?> newContainerFromState(BlockState blockState) {
-        for (Class<? extends BlockState> key : blockstateToContainerSupplierMap.keySet()) {
-            if (key.isInstance(blockState)) {
-                Function<BlockState, LockableContainer<?>> func = blockstateToContainerSupplierMap.get(key);
-                if (func != null) {
-                    return func.apply(blockState);
+        for (Class<? extends BlockState> blockStateClass : blockstateToContainerSupplierMap.keySet()) {
+            if (blockStateClass.isInstance(blockState)) { // if blocksStateClass == Chest.class, then equivalent to: blockState instanceof Chest
+                Function<BlockState, LockableContainer<?>> stateToContainerFunc = blockstateToContainerSupplierMap.get(blockStateClass);
+                if (stateToContainerFunc != null) {
+                    return stateToContainerFunc.apply(blockState);
                 }
             }
         }
