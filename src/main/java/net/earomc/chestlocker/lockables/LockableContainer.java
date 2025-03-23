@@ -24,7 +24,9 @@ public class LockableContainer<T extends Lockable & BlockState> {
         }
     }
     public void lock(String lock) {
-        state.setLock(lock);
+        // /data merge block xyz {lock:{components:{"minecraft:custom_name":'"lock"'}}}
+        // FIXME: This doesn't work anymore :( Need to wait for Paper/Bukkit update
+        state.setLock(lock); // deprecated API
         state.update();
     }
 
@@ -42,14 +44,15 @@ public class LockableContainer<T extends Lockable & BlockState> {
     }
 
     public void unlock() {
-        state.setLock("");
+        state.setLock(""); // deprecated API
         state.update();
     }
     public String getName() {
         return name;
     }
     public String getLock() {
-        return state.getLock();
+        // problem is we can't query the item that locked the container ...
+        return state.getLock(); // deprecated API
     }
     public boolean isLocked() {
         return state.isLocked();
