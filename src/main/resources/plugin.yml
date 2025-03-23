@@ -1,7 +1,7 @@
 name: "ChestLocker"
 version: "${project.version}"
 main: net.earomc.chestlocker.ChestLocker
-api-version: 1.19
+api-version: 1.21.4
 authors:
   - "earomc"
   - "kraken22"
