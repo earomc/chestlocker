@@ -4,6 +4,7 @@ import net.earomc.chestlocker.lockables.LockableChest;
 import net.earomc.chestlocker.lockables.LockableContainer;
 import net.earomc.chestlocker.lockables.LockableDoubleChest;
 import org.bukkit.block.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.function.Function;
 
 public class ContainerFactory {
 
-    private final Map<Class<? extends BlockState>, Function<BlockState, LockableContainer<?>>> blockstateToContainerSupplierMap;
+    private final Map<Class<? extends TileState>, Function<TileState, LockableContainer<?>>> blockstateToContainerSupplierMap;
 
     public ContainerFactory() {
          /*
@@ -41,16 +42,18 @@ public class ContainerFactory {
         });
     }
 
-    public void registerContainer(Class<? extends BlockState> blockStateClass, Function<BlockState, LockableContainer<?>> stateToContainerFunc) {
+    public void registerContainer(Class<? extends TileState> blockStateClass, Function<TileState, LockableContainer<?>> stateToContainerFunc) {
         blockstateToContainerSupplierMap.put(blockStateClass, stateToContainerFunc);
     }
 
-    public LockableContainer<?> newContainerFromState(BlockState blockState) {
+    @Nullable
+    public LockableContainer<?> newContainerFromBlockState(BlockState blockState) {
+        if (!(blockState instanceof TileState tileState)) return null;
         for (Class<? extends BlockState> blockStateClass : blockstateToContainerSupplierMap.keySet()) {
             if (blockStateClass.isInstance(blockState)) { // if blocksStateClass == Chest.class, then equivalent to: blockState instanceof Chest
-                Function<BlockState, LockableContainer<?>> stateToContainerFunc = blockstateToContainerSupplierMap.get(blockStateClass);
+                Function<TileState, LockableContainer<?>> stateToContainerFunc = blockstateToContainerSupplierMap.get(blockStateClass);
                 if (stateToContainerFunc != null) {
-                    return stateToContainerFunc.apply(blockState);
+                    return stateToContainerFunc.apply(tileState);
                 }
             }
         }

@@ -7,6 +7,7 @@ import net.earomc.chestlocker.lockables.LockableDoubleChest;
 import net.earomc.chestlocker.mode.Mode;
 import net.earomc.chestlocker.mode.ModeManager;
 import net.earomc.chestlocker.mode.ModeWithLock;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,6 +22,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
@@ -50,21 +53,37 @@ public class LockListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerInteractWithContainer(PlayerInteractEvent event) {
+    public void onPlayerRightClickContainer(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null) return;
-        if (event.getAction() != Action.LEFT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+
+        LockableContainer<?> container = containerFactory.newContainerFromBlockState(clickedBlock.getState());
+        if (container == null) return;
+
         Mode mode = modeManager.getMode(player);
-        if (mode == null) return;
-        LockableContainer<?> container = containerFactory.newContainerFromState(clickedBlock.getState());
-        if (container != null) {
+        if (mode != null) {
+            event.setCancelled(true);
             String lock = null;
             if (mode instanceof ModeWithLock modeWithLock) {
                 lock = modeWithLock.getLock();
             }
             mode.handleAction(player, lock, container);
+        } else {
+            if (container.isLocked() != holdsCorrectItem(player, container)) {
+                event.setCancelled(true);
+                ChestLockerSounds.playLockedSound(player.getLocation());
+            }
         }
+    }
+
+    private boolean holdsCorrectItem(Player player, LockableContainer<?> container) {
+        ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
+        ItemMeta itemMeta = itemInMainHand.getItemMeta();
+        if (itemMeta == null) return false;
+        String itemName = PlainTextComponentSerializer.plainText().serialize(itemInMainHand.effectiveName());
+        return itemName.equals(container.getLock());
     }
 
     //Safety handling
@@ -74,11 +93,11 @@ public class LockListener implements Listener {
         BlockState state = block.getState();
         if (state instanceof Chest chestState) {
             if (LockableDoubleChest.isDoubleChest(chestState)) {
-                LockableDoubleChest lockableDoubleChest = (LockableDoubleChest) containerFactory.newContainerFromState(state);
+                LockableDoubleChest lockableDoubleChest = (LockableDoubleChest) containerFactory.newContainerFromBlockState(chestState);
 
+                // lockableDoubleChest is not null because of "isDoubleChest()"
+                //noinspection DataFlowIssue
                 LockableChest otherChest = lockableDoubleChest.getOtherChest(chestState);
-
-                //no nullpointer because of "isDoubleChest()"
 
                 //noinspection ConstantConditions
                 if (otherChest.isLocked()) {
@@ -107,7 +126,7 @@ public class LockListener implements Listener {
             event.setCancelled(true);
             return;
         }
-        LockableContainer<?> lockableContainer = containerFactory.newContainerFromState(event.getBlock().getState());
+        LockableContainer<?> lockableContainer = containerFactory.newContainerFromBlockState(event.getBlock().getState());
         if (lockableContainer != null) {
             if (lockableContainer.isLocked()) {
                 event.setCancelled(true);

@@ -2,10 +2,13 @@ package net.earomc.chestlocker.lockables;
 
 import net.earomc.chestlocker.LockResult;
 import net.earomc.chestlocker.UnlockResult;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Lockable;
+import org.bukkit.block.TileState;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
-public class LockableContainer<T extends Lockable & BlockState> {
+import static net.earomc.chestlocker.ChestLocker.LOCK;
+
+public class LockableContainer<T extends TileState> {
 
     protected final T state;
     protected final String name;
@@ -16,17 +19,16 @@ public class LockableContainer<T extends Lockable & BlockState> {
     }
 
     public LockResult tryLock(String lock) {
-        if (!state.isLocked()) {
+        if (!isLocked()) {
             lock(lock);
             return LockResult.SUCCESS;
         } else {
             return LockResult.LOCK_ALREADY_SET;
         }
     }
+
     public void lock(String lock) {
-        // /data merge block xyz {lock:{components:{"minecraft:custom_name":'"lock"'}}}
-        // FIXME: This doesn't work anymore :( Need to wait for Paper/Bukkit update
-        state.setLock(lock); // deprecated API
+        pdc().set(LOCK, PersistentDataType.STRING, lock);
         state.update();
     }
 
@@ -44,18 +46,24 @@ public class LockableContainer<T extends Lockable & BlockState> {
     }
 
     public void unlock() {
-        state.setLock(""); // deprecated API
+        pdc().remove(LOCK);
         state.update();
     }
+
     public String getName() {
         return name;
     }
+
     public String getLock() {
-        // problem is we can't query the item that locked the container ...
-        return state.getLock(); // deprecated API
+        return pdc().get(LOCK, PersistentDataType.STRING);
     }
+
     public boolean isLocked() {
-        return state.isLocked();
+        return pdc().has(LOCK, PersistentDataType.STRING);
+    }
+
+    private PersistentDataContainer pdc() {
+        return this.state.getPersistentDataContainer();
     }
 
     public T getState() {

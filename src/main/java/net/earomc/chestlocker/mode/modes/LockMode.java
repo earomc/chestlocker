@@ -27,7 +27,7 @@ public class LockMode extends ModeWithLock {
 
     @Override
     public void onEnable() {
-        player.sendMessage("§aLeft click on a container you want to lock with §7" + lock + "§a.");
+        player.sendMessage("§aRight-click on a container you want to lock with §7" + lock + "§a.");
         player.sendMessage("§aSneak to cancel the process.");
     }
 
