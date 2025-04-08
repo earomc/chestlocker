@@ -73,8 +73,9 @@ public class LockableDoubleChest extends LockableContainer<Chest> {
 
     @Override
     public String getLock() {
-        if (chestLeft.getLock().equals(chestRight.getLock())) {
-            return chestLeft.getLock();
+        String leftLock = chestLeft.getLock();
+        if (leftLock != null && leftLock.equals(chestRight.getLock())) {
+            return leftLock;
         }
         else return "";
     }
@@ -92,11 +93,12 @@ public class LockableDoubleChest extends LockableContainer<Chest> {
 
     @Override
     public Chest getState() {
+        // return only one of the states, because it should be assured that both states have the same lock data.
         return chestLeft.getState();
     }
 
     public static boolean isDoubleChest(Chest chest) {
-        return chest.getInventory().getSize() == 54;
+        return chest.getInventory().getHolder() instanceof DoubleChest;
     }
 
     @Nullable

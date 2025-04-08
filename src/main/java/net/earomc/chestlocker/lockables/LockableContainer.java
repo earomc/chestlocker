@@ -13,8 +13,8 @@ public class LockableContainer<T extends TileState> {
     protected final T state;
     protected final String name;
 
-    public LockableContainer(T lockableBlockState, String name) {
-        this.state = lockableBlockState;
+    public LockableContainer(T tileState, String name) {
+        this.state = tileState;
         this.name = name;
     }
 

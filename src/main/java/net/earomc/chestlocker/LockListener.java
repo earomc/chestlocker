@@ -8,6 +8,7 @@ import net.earomc.chestlocker.mode.Mode;
 import net.earomc.chestlocker.mode.ModeManager;
 import net.earomc.chestlocker.mode.ModeWithLock;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -72,7 +73,7 @@ public class LockListener implements Listener {
             }
             mode.handleAction(player, lock, container);
         } else {
-            if (container.isLocked() != holdsCorrectItem(player, container)) {
+            if (container.isLocked() && !holdsCorrectItem(player, container)) {
                 event.setCancelled(true);
                 ChestLockerSounds.playLockedSound(player.getLocation());
             }
@@ -93,19 +94,21 @@ public class LockListener implements Listener {
         Block block = event.getBlock();
         BlockState state = block.getState();
         if (state instanceof Chest chestState) {
-            if (LockableDoubleChest.isDoubleChest(chestState)) {
-                LockableDoubleChest lockableDoubleChest = (LockableDoubleChest) containerFactory.newContainerFromBlockState(chestState);
+            Bukkit.getScheduler().runTaskLater(ChestLocker.instance(), () -> {
+                if (event.isCancelled()) return;
+                if (LockableDoubleChest.isDoubleChest(chestState)) {
+                    LockableDoubleChest lockableDoubleChest = (LockableDoubleChest) containerFactory.newContainerFromBlockState(chestState);
 
-                // lockableDoubleChest is not null because of "isDoubleChest()"
-                //noinspection DataFlowIssue
-                LockableChest otherChest = lockableDoubleChest.getOtherChest(chestState);
-
-                //noinspection ConstantConditions
-                if (otherChest.isLocked()) {
-                    String lock = otherChest.getLock();
-                    lockableDoubleChest.lock(lock);
+                    // Not null because of isDoubleChest()
+                    //noinspection DataFlowIssue
+                    LockableChest otherChest = lockableDoubleChest.getOtherChest(chestState);
+                    //noinspection ConstantConditions
+                    if (otherChest.isLocked()) {
+                        String lock = otherChest.getLock();
+                        lockableDoubleChest.lock(lock);
+                    }
                 }
-            }
+            }, 1);
         }
     }
 
