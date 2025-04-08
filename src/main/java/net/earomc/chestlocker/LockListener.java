@@ -58,6 +58,7 @@ public class LockListener implements Listener {
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null) return;
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (player.isSneaking()) return;
 
         LockableContainer<?> container = containerFactory.newContainerFromBlockState(clickedBlock.getState());
         if (container == null) return;
