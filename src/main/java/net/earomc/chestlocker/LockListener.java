@@ -111,11 +111,9 @@ public class LockListener implements Listener {
     @EventHandler
     public void onMoveShulkerBoxWithPiston(BlockPistonExtendEvent event) {
         for (Block block : event.getBlocks()) {
-            if (block.getState() instanceof Lockable lockable) {
-                if (lockable.isLocked()) {
-                    event.setCancelled(true);
-                }
-            }
+            LockableContainer<?> container = containerFactory.newContainerFromBlockState(block.getState());
+            if (container == null || !container.isLocked()) continue;
+            event.setCancelled(true);
         }
     }
 
@@ -139,11 +137,9 @@ public class LockListener implements Listener {
     public void onBlowUpLockedContainers(EntityExplodeEvent event) {
         ArrayList<Block> lockedBlocks = new ArrayList<>();
         for (Block block : event.blockList()) {
-            if (block.getState() instanceof Lockable lockable) {
-                if (lockable.isLocked()) {
-                    lockedBlocks.add(block);
-                }
-            }
+            LockableContainer<?> container = containerFactory.newContainerFromBlockState(block.getState());
+            if (container == null || !container.isLocked()) continue;
+            lockedBlocks.add(block);
         }
         event.blockList().removeAll(lockedBlocks);
     }
@@ -151,17 +147,19 @@ public class LockListener implements Listener {
     @EventHandler
     public void onHopperRetrieveItems(InventoryMoveItemEvent event) {
         InventoryHolder holder = event.getSource().getHolder();
-        if (holder instanceof Lockable) {
-            Lockable chest = (Lockable) event.getSource().getHolder();
-            if (chest != null) {
-                if (chest.isLocked()) {
-                    event.setCancelled(true);
-                }
+        if (holder instanceof BlockState blockState) {
+            LockableContainer<?> container = containerFactory.newContainerFromBlockState(blockState);
+            if (container != null && container.isLocked()) {
+                event.setCancelled(true);
             }
         } else if (holder instanceof DoubleChest) {
             DoubleChest chest = (DoubleChest) event.getSource().getHolder();
-            Chest chestLeft = (Chest) chest.getLeftSide();
-            Chest chestRight = (Chest) chest.getRightSide();
+            BlockState chestLeftState = (BlockState) chest.getLeftSide();
+            BlockState chestRightState = (BlockState) chest.getRightSide();
+
+            LockableContainer<?> chestLeft = containerFactory.newContainerFromBlockState(chestLeftState);
+            LockableContainer<?> chestRight = containerFactory.newContainerFromBlockState(chestRightState);
+
             //noinspection ConstantConditions
             if (chestLeft.isLocked() || chestRight.isLocked()) {
                 event.setCancelled(true);
