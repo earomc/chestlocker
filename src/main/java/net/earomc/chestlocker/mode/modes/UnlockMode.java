@@ -22,7 +22,7 @@ public class UnlockMode extends ModeWithLock {
     @Override
     public void onEnable() {
         player.sendMessage("§aRight-click on a container you want to unlock.");
-        player.sendMessage("§aSneak to cancel the process.");
+        player.sendMessage("§aSneak to exit unlock mode.");
     }
 
     @Override
